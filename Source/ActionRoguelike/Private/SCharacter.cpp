@@ -53,6 +53,8 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttack);
+	PlayerInputComponent->BindAction("SecondaryAttack", IE_Pressed, this, &ASCharacter::SecondaryAttack);
+	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ASCharacter::Dash);
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ASCharacter::PrimaryInteract);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 }
@@ -88,7 +90,41 @@ void ASCharacter::PrimaryAttack()
 	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimeElapsed, 0.2f);
 }
 
+void ASCharacter::SecondaryAttack()
+{
+	PlayAnimMontage(AttackAnim);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_SecondAttack, this, &ASCharacter::SecondaryAttack_TimeElapsed, 0.2f);
+}
+
+void ASCharacter::Dash()
+{
+	PlayAnimMontage(AttackAnim);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_Dash, this, &ASCharacter::Dash_TimeElapsed, 0.2f);
+}
+
 void ASCharacter::PrimaryAttack_TimeElapsed()
+{
+	SpawnProjectile(PrimaryProjectileClass);
+}
+
+void ASCharacter::SecondaryAttack_TimeElapsed()
+{
+	SpawnProjectile(SecondaryProjectileClass);
+}
+
+void ASCharacter::Dash_TimeElapsed()
+{
+	SpawnProjectile(DashProjectileClass);
+}
+
+void ASCharacter::PrimaryInteract()
+{
+	InteractionComp->PrimaryInteract();
+}
+
+void ASCharacter::SpawnProjectile(TSubclassOf<AActor> ProjectileClass)
 {
 	if (ensure(ProjectileClass))
 	{
@@ -101,7 +137,7 @@ void ASCharacter::PrimaryAttack_TimeElapsed()
 		FHitResult Hit;
 		FVector TraceStart = CameraComp->GetComponentLocation();
 		FVector TraceEnd = TraceStart + (GetControlRotation().Vector() * 5000);
-		
+
 		FCollisionShape Shape;
 		Shape.SetSphere(20.0f);
 
@@ -127,9 +163,4 @@ void ASCharacter::PrimaryAttack_TimeElapsed()
 
 		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
 	}
-}
-
-void ASCharacter::PrimaryInteract()
-{
-	InteractionComp->PrimaryInteract();
 }
