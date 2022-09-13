@@ -12,6 +12,8 @@ ASExplosiveBarrel::ASExplosiveBarrel()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	HasExploded = false;
+
 	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComp");
 	StaticMeshComp->SetSimulatePhysics(true);
 	StaticMeshComp->SetCollisionProfileName("PhysicsActor");
@@ -53,13 +55,18 @@ void ASExplosiveBarrel::Tick(float DeltaTime)
 
 void ASExplosiveBarrel::OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	RadialForceComp->FireImpulse();
+	if (!HasExploded)
+	{
+		RadialForceComp->FireImpulse();
 
-	UE_LOG(LogTemp, Log, TEXT("OnActorHit in Explosive Barrel"));
+		UE_LOG(LogTemp, Log, TEXT("OnActorHit in Explosive Barrel"));
 
-	UE_LOG(LogTemp, Warning, TEXT("OtherActor: %s, at game time: %f"), *GetNameSafe(OtherActor), GetWorld()->TimeSeconds);
+		UE_LOG(LogTemp, Warning, TEXT("OtherActor: %s, OtherComp: %s, at game time: %f"), *GetNameSafe(OtherActor), *GetNameSafe(OtherComp), GetWorld()->TimeSeconds);
 
-	FString CombinedString = FString::Printf(TEXT("Hit at location: %s"), *Hit.ImpactPoint.ToString());
-	DrawDebugString(GetWorld(), Hit.ImpactPoint, CombinedString, nullptr, FColor::Green, 2.0f, true);
+		FString CombinedString = FString::Printf(TEXT("Hit at location: %s"), *Hit.ImpactPoint.ToString());
+		DrawDebugString(GetWorld(), Hit.ImpactPoint, CombinedString, nullptr, FColor::Green, 2.0f, true);
+
+		HasExploded = true;
+	}
 }
 

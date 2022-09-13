@@ -26,6 +26,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	URadialForceComponent* RadialForceComp;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool HasExploded;
+
 	virtual void PostInitializeComponents() override;
 
 	// Called when the game starts or when spawned

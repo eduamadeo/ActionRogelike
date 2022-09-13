@@ -48,8 +48,13 @@ void ASDashProjectile::Explode()
 
 void ASDashProjectile::Explosion_TimeElapsed()
 {
-	GetInstigator()->TeleportTo(GetActorLocation(), GetInstigator()->GetActorRotation(), false, false);
-	Destroy();
+	AActor* ExplosionInstigator = GetInstigator();
+
+	if (ExplosionInstigator)
+	{
+		ExplosionInstigator->TeleportTo(GetActorLocation(), ExplosionInstigator->GetActorRotation(), false, false);
+		Destroy();
+	}
 }
 
 void ASDashProjectile::OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
