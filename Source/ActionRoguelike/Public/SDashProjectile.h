@@ -16,6 +16,12 @@ class ACTIONROGUELIKE_API ASDashProjectile : public ASProjectileBase
 	
 protected:
 
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
+		float TeleportDelay;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
+		float DetonateDelay;
+
 	FTimerHandle TimerHandle_PreDash;
 
 public:
@@ -26,16 +32,7 @@ protected:
 
 	virtual void BeginPlay() override;
 
-	virtual void PostInitializeComponents() override;
+	virtual void Explode_Implementation() override;
 
-	void PreDash_TimeElapsed();
-
-	void Explode();
-
-	void Explosion_TimeElapsed();
-
-public:
-
-	UFUNCTION()
-	void OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	void TeleportInstigator();
 };

@@ -9,6 +9,9 @@
 
 ASDashProjectile::ASDashProjectile()
 {
+	TeleportDelay = 0.2f;
+	DetonateDelay = 0.2f;
+
 	MovementComp->InitialSpeed = 6000.0f;
 }
 
@@ -16,48 +19,32 @@ void ASDashProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetWorldTimerManager().SetTimer(TimerHandle_PreDash, this, &ASDashProjectile::PreDash_TimeElapsed, 0.2f);
+	GetWorldTimerManager().SetTimer(TimerHandle_PreDash, this, &ASDashProjectile::Explode, DetonateDelay);
 }
 
-void ASDashProjectile::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-
-	SphereComp->OnComponentHit.AddDynamic(this, &ASDashProjectile::OnCompHit);
-}
-
-void ASDashProjectile::PreDash_TimeElapsed()
-{
-	Explode();
-}
-
-void ASDashProjectile::Explode()
+void ASDashProjectile::Explode_Implementation()
 {
 	GetWorldTimerManager().ClearTimer(TimerHandle_PreDash);
 
-	EffectComp->DeactivateSystem();
-
 	UGameplayStatics::SpawnEmitterAtLocation(this, ImpactVFX, GetActorLocation(), GetActorRotation());
+
+	EffectComp->DeactivateSystem();
 
 	MovementComp->StopMovementImmediately();
 	SetActorEnableCollision(false);
 
 	FTimerHandle TimerHandle_Explosion;
-	GetWorldTimerManager().SetTimer(TimerHandle_Explosion, this, &ASDashProjectile::Explosion_TimeElapsed, 0.2f);
+	GetWorldTimerManager().SetTimer(TimerHandle_Explosion, this, &ASDashProjectile::TeleportInstigator, TeleportDelay);
 }
 
-void ASDashProjectile::Explosion_TimeElapsed()
+void ASDashProjectile::TeleportInstigator()
 {
-	AActor* ExplosionInstigator = GetInstigator();
+	AActor* ActorToTeleport = GetInstigator();
 
-	if (ExplosionInstigator)
+	if (ensure(ActorToTeleport))
 	{
-		ExplosionInstigator->TeleportTo(GetActorLocation(), ExplosionInstigator->GetActorRotation(), false, false);
-		Destroy();
+		ActorToTeleport->TeleportTo(GetActorLocation(), ActorToTeleport->GetActorRotation(), false, false);
 	}
-}
 
-void ASDashProjectile::OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-	Explode();
+	Destroy();
 }

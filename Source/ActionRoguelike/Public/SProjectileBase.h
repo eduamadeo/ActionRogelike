@@ -33,4 +33,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BluePrintReadOnly)
 	UParticleSystemComponent* EffectComp;
 
+	UFUNCTION()
+	virtual void OnActorHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void Explode();
+
+	virtual void PostInitializeComponents() override;
+
 };
