@@ -6,10 +6,21 @@
 #include "SProjectileBase.h"
 #include "SMagicProjectile.generated.h"
 
+class UAudioComponent;
+class USoundCue;
+
 UCLASS()
 class ACTIONROGUELIKE_API ASMagicProjectile : public ASProjectileBase
 {
 	GENERATED_BODY()
+
+protected:
+
+	UPROPERTY(VisibleAnywhere)
+	UAudioComponent* AudioComp;
+
+	UPROPERTY(EditAnywhere, Category = "Audio")
+	USoundCue* ImpactSound;
 	
 public:	
 	// Sets default values for this actor's properties
