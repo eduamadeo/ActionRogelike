@@ -40,6 +40,9 @@ public:
 	bool IsFullHealth();
 
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	float GetHealth();
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	float GetHealthMax();
 		
 };

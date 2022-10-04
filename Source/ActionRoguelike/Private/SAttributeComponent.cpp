@@ -32,6 +32,11 @@ bool USAttributeComponent::IsFullHealth()
 	return Health == HealthMax;
 }
 
+float USAttributeComponent::GetHealth()
+{
+	return Health;
+}
+
 float USAttributeComponent::GetHealthMax()
 {
 	return HealthMax;
