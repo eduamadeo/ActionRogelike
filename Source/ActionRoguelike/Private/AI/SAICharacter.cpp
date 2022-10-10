@@ -7,6 +7,7 @@
 #include "SAttributeComponent.h"
 #include <BehaviorTree/BlackboardComponent.h>
 #include "BrainComponent.h"
+#include "SWorldUserWidget.h"
 
 
 ASAICharacter::ASAICharacter()
@@ -35,6 +36,16 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 		if (InstigatorActor != this)
 		{
 			SetTargetActor(InstigatorActor);
+		}
+
+		if (ActiveHealthBar == nullptr)
+		{
+			ActiveHealthBar = CreateWidget<USWorldUserWidget>(GetWorld(), HealthBarWidgetClass);
+			if (ActiveHealthBar)
+			{
+				ActiveHealthBar->AttachedActor = this;
+				ActiveHealthBar->AddToViewport();
+			}
 		}
 
 		GetMesh()->SetScalarParameterValueOnMaterials(TimeToHitParamName, GetWorld()->TimeSeconds);
