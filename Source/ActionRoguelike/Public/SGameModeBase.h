@@ -32,13 +32,39 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	float SpawnTimerInterval;
 
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerState|Credits")
+	int32 CreditsPerKill;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Powerups")
+	UEnvQuery* PowerupSpawnQuery;
+
+	/* All power-up classes used to spawn with EQS at match start */
+	UPROPERTY(EditDefaultsOnly, Category = "Powerups")
+	TArray<TSubclassOf<AActor>> PowerupClasses;
+
+	/* Distance required between power-up spawn locations */
+	UPROPERTY(EditDefaultsOnly, Category = "Powerups")
+	float RequiredPowerupDistance;
+
+	/* Amount of power ups to spawn during match start */
+	UPROPERTY(EditDefaultsOnly, Category = "Powerups")
+	int32 DesiredPowerupCount;
+
 	UFUNCTION()
 	void SpawnBotTimerElapsed();
 
 	UFUNCTION()
-	void OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
+	void OnBotSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
+
+	UFUNCTION()
+	void OnPowerupSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
+
+	UFUNCTION()
+	void RespawnPlayerElapsed(AController* Controller);
 
 public:
+
+	virtual void OnActorKilled(AActor* VictimActor, AActor* Killer);
 
 	ASGameModeBase();
 

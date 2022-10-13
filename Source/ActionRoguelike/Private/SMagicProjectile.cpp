@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/AudioComponent.h"
 #include "Sound/SoundCue.h"
+#include "SGameplayFunctionLibrary.h"
 
 // Sets default values
 ASMagicProjectile::ASMagicProjectile()
@@ -25,7 +26,7 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	if (OtherActor && OtherActor != GetInstigator())
 	{
-		USAttributeComponent* AttributeComp = USAttributeComponent::GetAttributes(OtherActor);
+		/*USAttributeComponent* AttributeComp = USAttributeComponent::GetAttributes(OtherActor);
 		if (AttributeComp)
 		{
 			AttributeComp->ApplyHealthChange(GetInstigator(), -DamageAmount);
@@ -34,7 +35,12 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 		UGameplayStatics::SpawnEmitterAtLocation(this, ImpactVFX, GetActorLocation(), GetActorRotation());
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ImpactSound, GetActorLocation(), GetActorRotation());
 
-		Destroy();
+		Destroy();*/
+
+		if (USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, DamageAmount, SweepResult))
+		{
+			Explode();
+		}
 	}
 }
 

@@ -4,27 +4,27 @@
 
 #include "CoreMinimal.h"
 #include "SPowerUpBase.h"
-#include "SPowerUp_HealthPotion.generated.h"
+#include "SPowerUp_Coin.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ACTIONROGUELIKE_API ASPowerUp_HealthPotion : public ASPowerUpBase
+class ACTIONROGUELIKE_API ASPowerUp_Coin : public ASPowerUpBase
 {
 	GENERATED_BODY()
-
+	
 public:
 
-	ASPowerUp_HealthPotion();
-	
+	ASPowerUp_Coin();
+
 protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* MeshComp;
 
 	UPROPERTY(EditDefaultsOnly, Category = "PlayerState|Credits")
-	int32 CreditsCost;
+	int32 CreditsAmount;
 
 	void Interact_Implementation(APawn* InstigatorPawn) override;
 };
