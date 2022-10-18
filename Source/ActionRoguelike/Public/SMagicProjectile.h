@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SProjectileBase.h"
+#include <GameplayTagContainer.h>
 #include "SMagicProjectile.generated.h"
 
 class UAudioComponent;
@@ -15,6 +16,9 @@ class ACTIONROGUELIKE_API ASMagicProjectile : public ASProjectileBase
 	GENERATED_BODY()
 
 protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	FGameplayTag ParryTag;
 
 	UPROPERTY(VisibleAnywhere)
 	UAudioComponent* AudioComp;
