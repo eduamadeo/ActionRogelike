@@ -15,6 +15,8 @@ ASPowerUpBase::ASPowerUpBase()
 	RootComponent = SphereComp;
 
 	RespawnTime = 10.0f;
+
+	SetReplicates(true);
 }
 
 void ASPowerUpBase::Interact_Implementation(APawn* InstigatorPawn)

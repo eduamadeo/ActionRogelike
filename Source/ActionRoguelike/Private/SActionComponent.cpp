@@ -9,9 +9,8 @@ USActionComponent::USActionComponent()
 	
 	PrimaryComponentTick.bCanEverTick = true;
 
-	
+	SetIsReplicatedByDefault(true);
 }
-
 
 // Called when the game starts
 void USActionComponent::BeginPlay()
@@ -89,6 +88,11 @@ bool USActionComponent::StartActionByName(AActor* Instigator, FName ActionName)
 				continue;
 			}
 
+			if (!GetOwner()->HasAuthority())
+			{
+				ServerStartAction(Instigator, ActionName);
+			}
+
 			Action->StartAction(Instigator);
 			return true;
 		}
@@ -122,5 +126,10 @@ USActionComponent* USActionComponent::GetActions(AActor* FromActor)
 	}
 
 	return nullptr;
+}
+
+void USActionComponent::ServerStartAction_Implementation(AActor* Instigator, FName ActionName)
+{
+	StartActionByName(Instigator, ActionName);
 }
 
