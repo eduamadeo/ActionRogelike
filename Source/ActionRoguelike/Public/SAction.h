@@ -29,7 +29,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Tags")
 	FGameplayTagContainer BlockedTags;
 
+	UPROPERTY(ReplicatedUsing="OnRep_IsRunning")
 	bool bIsRunning;
+
+	UFUNCTION()
+	void OnRep_IsRunning();
 
 public:
 
@@ -53,5 +57,7 @@ public:
 	FName ActionName;
 
 	UWorld* GetWorld() const override;
+
+	virtual bool IsSupportedForNetworking() const override { return true; }
 	
 };

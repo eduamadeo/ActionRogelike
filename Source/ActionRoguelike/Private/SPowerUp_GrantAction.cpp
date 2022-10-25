@@ -14,7 +14,7 @@ ASPowerUp_GrantAction::ASPowerUp_GrantAction()
 
 void ASPowerUp_GrantAction::Interact_Implementation(APawn* InstigatorPawn)
 {
-	if (!ensure(InstigatorPawn))
+	if (!ensure(InstigatorPawn && ActionClass))
 	{
 		return;
 	}

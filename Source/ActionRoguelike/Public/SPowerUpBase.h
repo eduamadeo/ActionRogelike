@@ -26,8 +26,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Powerup")
 	float RespawnTime;
 
-	UPROPERTY(VisibleAnywhere)
-	bool IsInactive;
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = "OnRep_IsActive")
+	bool bIsActive;
 
 	UFUNCTION()
 	void ShowPowerup();
@@ -35,6 +35,9 @@ protected:
 	void HideAndCooldownPowerup();
 
 	void SetPowerupState(bool bNewIsActive);
+
+	UFUNCTION()
+	void OnRep_IsActive();
 
 public:	
 

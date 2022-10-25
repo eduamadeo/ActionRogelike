@@ -3,6 +3,7 @@
 
 #include "SPowerUpBase.h"
 #include "Components/SphereComponent.h"
+#include <Net/UnrealNetwork.h>
 
 // Sets default values
 ASPowerUpBase::ASPowerUpBase()
@@ -15,6 +16,7 @@ ASPowerUpBase::ASPowerUpBase()
 	RootComponent = SphereComp;
 
 	RespawnTime = 10.0f;
+	bIsActive = true;
 
 	SetReplicates(true);
 }
@@ -39,8 +41,21 @@ void ASPowerUpBase::HideAndCooldownPowerup()
 
 void ASPowerUpBase::SetPowerupState(bool bNewIsActive)
 {
-	SetActorEnableCollision(bNewIsActive);
+	bIsActive = bNewIsActive;
+	OnRep_IsActive();
+}
 
-	RootComponent->SetVisibility(bNewIsActive, true);
+void ASPowerUpBase::OnRep_IsActive()
+{
+	SetActorEnableCollision(bIsActive);
+
+	RootComponent->SetVisibility(bIsActive, true);
+}
+
+void ASPowerUpBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ASPowerUpBase, bIsActive);
 }
 
