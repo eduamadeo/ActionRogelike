@@ -3,6 +3,7 @@
 
 #include "SPlayerState.h"
 #include <Net/UnrealNetwork.h>
+#include "SSaveGame.h"
 
 ASPlayerState::ASPlayerState()
 {
@@ -26,6 +27,22 @@ bool ASPlayerState::RemoveCredits(int32 Delta)
 		return true;
 	}
 	return false;
+}
+
+void ASPlayerState::SavePlayerState_Implementation(USSaveGame* SaveObject)
+{
+	if (SaveObject)
+	{
+		SaveObject->Credits = Credits;
+	}
+}
+
+void ASPlayerState::LoadPlayerState_Implementation(USSaveGame* SaveObject)
+{
+	if (SaveObject)
+	{
+		 Credits = SaveObject->Credits;
+	}
 }
 
 void ASPlayerState::OnRep_Credits(int32 OldCredits)
